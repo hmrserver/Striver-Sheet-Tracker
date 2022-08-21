@@ -7,8 +7,12 @@ export default function Header() {
   let location = useLocation();
   const { leetcodeSession } = useContext(ApiContext);
   //get json data from JWT token
-  const jwt = leetcodeSession.split(".")[1];
-  const jwtData = JSON.parse(atob(jwt));
+
+  let jwtData = {};
+  if (leetcodeSession) {
+    const jwt = leetcodeSession.split(".")[1];
+    jwtData = JSON.parse(atob(jwt));
+  }
 
   // const { id } = useParams();
   // console.log(id);
@@ -57,14 +61,24 @@ export default function Header() {
             </div>
 
             <div class="flex justify-between flex-col">
-              <div class="flex gap-4 mb-4 flex-row items-center sm:justify-end justify-center">
-                <label class="btn btn-ghost btn-circle avatar">
-                  <div class="w-10 rounded-full">
-                    <img src={jwtData.avatar} />
-                  </div>
-                </label>
-                <h5 class="text-gray-300">{jwtData.username}</h5>
-              </div>
+              {jwtData?.avatar ? (
+                <div class="flex gap-4 mb-4 flex-row items-center sm:justify-end justify-center">
+                  <label class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                      <img
+                        src={
+                          typeof jwtData !== "undefined" ? jwtData?.avatar : ""
+                        }
+                      />
+                    </div>
+                  </label>
+                  <h5 class="text-gray-300">
+                    {typeof jwtData !== "undefined" ? jwtData?.username : ""}
+                  </h5>
+                </div>
+              ) : (
+                ""
+              )}
               <div class="flex flex-col gap-4 mt-4 sm:flex-row sm:mt-0 sm:items-center">
                 <button
                   class="block px-5 py-3 text-sm font-medium text-white transition bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring"
