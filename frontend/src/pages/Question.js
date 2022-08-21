@@ -37,20 +37,40 @@ export default function Question({ problem, index }) {
     <tr class="hover">
       <td class="bg-base-200">{index + 1}</td>
       <td class="bg-base-200 table-cell align-middle">
-        <span class="float-left">
+        <span class="float-left flex">
           <a
             // class="link link-primary/50 link-hover"
             class={
-              qstats?.status === "ac" || qstatsCn?.status === "COMPLETED"
-                ? "line-through text-green-500 link link-primary/50 link-hover"
-                : "link link-primary/50 link-hover" // " float-left"
+              (qstats?.status === "ac" || qstatsCn?.status === "COMPLETED"
+                ? "line-through text-green-500"
+                : qstats?.status === "notac" || qstatsCn?.status === "ATTEMPTED"
+                ? "text-orange-500"
+                : "") + " link link-primary/50 link-hover"
             }
             href={problem.takeuforward}
             target="_blank"
           >
             {problem.name}
           </a>
-          <span class="ml-2">
+          <span class="ml-2 flex items-center gap-2">
+            <span class="text-red-500 inline-block">
+              {qstats?.isLiked || qstatsCn?.is_upvoted ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              ) : (
+                ""
+              )}
+            </span>
             <span class="text-xs text-slate-500">
               Avg. Time
               <span class="badge badge-xs ml-1">

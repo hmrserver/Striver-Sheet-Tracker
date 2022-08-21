@@ -34,6 +34,7 @@ export function questionStatsLeetcode(session, question) {
   )
     .then((res) => res.json())
     .then((res) => {
+      // console.log(res.data.question);
       return res.data.question;
     });
 }
@@ -67,6 +68,7 @@ export function questionStatsCodingninjas(token, qid) {
             status: final.data.problem_list[0].submission_status,
             company: final.data.problem_list[0].company_list,
             difficulty: final.data.problem_list[0].difficulty,
+            is_upvoted: final.data.problem_list[0].is_upvoted,
           };
         });
     });
