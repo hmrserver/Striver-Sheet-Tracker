@@ -196,8 +196,54 @@ export default function Question({ problem, index }) {
         )} */}
 
           <span class="float-right relative inline-block">
-            {qstatsCn?.company?.length > 0
-              ? qstatsCn.company.map((company, index) => (
+            {qstatsCn?.company?.length > 0 ? (
+              qstatsCn?.company?.length > 5 ? (
+                <span>
+                  {" "}
+                  {qstatsCn?.company?.slice(0, 5).map((company, index) => (
+                    <span
+                      class="tooltip tooltip-primary"
+                      data-tip={company.name}
+                    >
+                      <img
+                        class="h-5 rounded-md ml-1 transition duration-200 hover:scale-125 cursor-pointer"
+                        src={company.logo_url}
+                      />
+                    </span>
+                  ))}
+                  <div className="dropdown dropdown-end ml-2 -top-1">
+                    <label
+                      tabIndex={0}
+                      className="btn btn-circle btn-ghost btn-xs text-info"
+                    >
+                      + {qstatsCn.company.length - 5}
+                    </label>
+                    <div
+                      tabIndex={0}
+                      className="card compact dropdown-content shadow bg-base-100 rounded-box w-64"
+                    >
+                      <div className="card-body">
+                        <div className="flex flex-wrap">
+                          {qstatsCn.company.slice(5).map((company, index) => (
+                            <div className="flex flex-col items-center m-1">
+                              <span
+                                class="tooltip tooltip-primary"
+                                data-tip={company.name}
+                              >
+                                <img
+                                  class="h-5 rounded-md ml-1 transition duration-200 hover:scale-125 cursor-pointer"
+                                  src={company.logo_url}
+                                />
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </span>
+              ) : (
+                qstatsCn.company.map((company, index) => (
                   <span class="tooltip tooltip-primary" data-tip={company.name}>
                     <img
                       class="h-5 rounded-md ml-1 transition duration-200 hover:scale-125 cursor-pointer"
@@ -205,7 +251,10 @@ export default function Question({ problem, index }) {
                     />
                   </span>
                 ))
-              : ""}
+              )
+            ) : (
+              ""
+            )}
           </span>
         </span>
       </td>
