@@ -8,6 +8,8 @@ import Question from "./Question";
 
 export default function Day() {
   const { id } = useParams();
+  const [temp, setTemp] = useState(0);
+
   // const { setDay } = useContext(ApiContext);
   // setDay(id);
   return (
@@ -24,8 +26,9 @@ export default function Day() {
           </tr>
         </thead>
         <tbody>
+          <h1>{temp}</h1>
           {problems[id].value.map((problem, index) => (
-            <Question problem={problem} index={index} />
+            <Question problem={problem} index={index} temp = {temp} setTemp= {setTemp} />
           ))}
         </tbody>
       </table>
