@@ -6,13 +6,11 @@ import {
 import { ApiContext } from "../contexts/ApiContext";
 import { useContext, useState, useEffect } from "react";
 
-export default function Question({ problem, index, temp, setTemp }) {
+export default function Question({ problem, index }) {
   const { leetcodeSession, codingninjasToken } = useContext(ApiContext);
   const [qstats, setQstats] = useState(problem);
   const [qstatsCn, setQstatsCn] = useState(null);
-  const [isQuestionDone, setIsQuestionDone] = useState(false);
   // console.log(leetcodeSession);
-
   function splitQuestionTitle(url, urlCodingninjas) {
     if (urlCodingninjas) {
       const qid = urlCodingninjas.split("/problems/")[1].split("?")[0];
@@ -31,9 +29,6 @@ export default function Question({ problem, index, temp, setTemp }) {
     });
   }
   useEffect(() => {
-    qstats?.status === "ac" || qstatsCn?.status === "COMPLETED"? setTemp(temp+1): setTemp(temp);
-  }, [qstats, qstatsCn])
-  useEffect(() => {
     // console.log("useEffect", problem.codingninjas);
     splitQuestionTitle(problem.leetcode, problem.codingninjas);
   }, []);
@@ -45,7 +40,7 @@ export default function Question({ problem, index, temp, setTemp }) {
           <a
             // class="link link-primary/50 link-hover"
             class={
-              (qstats?.status === "ac" || qstatsCn?.status === "COMPLETED"//if green temp = temp++;
+              (qstats?.status === "ac" || qstatsCn?.status === "COMPLETED"
                 ? "line-through text-green-500"
                 : qstats?.status === "notac" || qstatsCn?.status === "ATTEMPTED"
                 ? "text-orange-500"
