@@ -219,10 +219,10 @@ export default function Question({ problem, index }) {
                     </label>
                     <div
                       tabIndex={0}
-                      className="card compact dropdown-content shadow bg-base-100 rounded-box w-64"
+                      className="card compact dropdown-content shadow bg-base-100 rounded-box w-64  overflow-visible"
                     >
-                      <div className="card-body">
-                        <div className="flex flex-wrap">
+                      <div className="card-body overflow-visible">
+                        <div className="flex flex-wrap overflow-visible">
                           {qstatsCn.company.slice(5).map((company, index) => (
                             <div className="flex flex-col items-center m-1">
                               <span
