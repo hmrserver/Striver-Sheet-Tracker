@@ -2,6 +2,8 @@ import React from "react";
 import {
   questionStatsLeetcode,
   questionStatsCodingninjas,
+  getCacheData,
+  shouldFetchData,
 } from "../contexts/apiLeetcode";
 import { ApiContext } from "../contexts/ApiContext";
 import { useContext, useState, useEffect } from "react";
@@ -11,22 +13,39 @@ export default function Question({ problem, index }) {
   const [qstats, setQstats] = useState(problem);
   const [qstatsCn, setQstatsCn] = useState(null);
   // console.log(leetcodeSession);
-  function splitQuestionTitle(url, urlCodingninjas) {
+  async function splitQuestionTitle(urlLeetcode, urlCodingninjas) {
+    if (!urlLeetcode && !urlCodingninjas) return; // Both URLs are empty, no need to fetch
+    let codingninjasQid = null;
+    let leetcodeTitle = null;
+  
     if (urlCodingninjas) {
-      const qid = urlCodingninjas.split("/problems/")[1].split("?")[0];
-      // console.log(qid);
-      questionStatsCodingninjas(codingninjasToken, qid).then((res) => {
-        // console.log("DONE", res);
-        setQstatsCn(res);
-        // console.log("DONE", res);
-      });
+      codingninjasQid = urlCodingninjas.split("/problems/")[1].split("?")[0];
     }
-    if (url === undefined) return "";
-    const title = url.split("/")[4];
-    // console.log(title);
-    questionStatsLeetcode(leetcodeSession, title).then((res) => {
-      setQstats(res);
-    });
+  
+    if (urlLeetcode) {
+      leetcodeTitle = urlLeetcode.split("/")[4];
+    }
+  
+    const cnData = codingninjasQid ? getCacheData(`codingninjas_${codingninjasQid}`) : null;
+    const lcData = leetcodeTitle ? getCacheData(`leetcode_${leetcodeTitle}`) : null;
+  
+    if (cnData && lcData && (!shouldFetchData(cnData) || !shouldFetchData(lcData))) {
+      setQstatsCn(cnData);
+      setQstats(lcData);
+    } else {
+      const [codingninjasResponse, leetcodeResponse] = await Promise.all([
+        questionStatsCodingninjas(codingninjasToken, codingninjasQid),
+        questionStatsLeetcode(leetcodeSession, leetcodeTitle),
+      ]);
+  
+      if (codingninjasResponse) {
+        setQstatsCn(codingninjasResponse);
+      }
+  
+      if (leetcodeResponse) {
+        setQstats(leetcodeResponse);
+      }
+    }
   }
   useEffect(() => {
     // console.log("useEffect", problem.codingninjas);
