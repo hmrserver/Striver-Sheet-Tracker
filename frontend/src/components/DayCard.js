@@ -6,7 +6,7 @@ export default function DayCard({ day }) {
   const dayNumber = daySplit[0];
   const topic = daySplit[1];
   return (
-    <article class="">
+    <article class="z-10">
       <div class="flex items-center">
         {/* <img
           src="https://unavatar.now.sh/twitter/itsmarkmead"
@@ -14,11 +14,11 @@ export default function DayCard({ day }) {
           class="w-16 h-16 rounded-full"
         /> */}
         {/* <div
-          class="radial-progress text-primary"
-          style={{ "--value": 70, "--size": "4rem", "--thickness": "2px" }}
-        >
-          70%
-        </div> */}
+            class="radial-progress text-primary"
+            style={{ "--value": 70, "--size": "4rem", "--thickness": "2px" }}
+          >
+            70%
+          </div> */}
 
         <div class="ml-4">
           <h5 class="text-lg font-medium text-white">{dayNumber}</h5>

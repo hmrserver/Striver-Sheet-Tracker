@@ -25,7 +25,7 @@ export default function Day() {
         </thead>
         <tbody>
           {problems[id].value.map((problem, index) => (
-            <Question problem={problem} index={index} />
+            <Question problem={problem} index={index} pageid={id} />
           ))}
         </tbody>
       </table>

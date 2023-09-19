@@ -8,8 +8,9 @@ import {
 import { ApiContext } from "../contexts/ApiContext";
 import { useContext, useState, useEffect } from "react";
 
-export default function Question({ problem, index }) {
-  const { leetcodeSession, codingninjasToken } = useContext(ApiContext);
+export default function Question({ problem, index, pageid }) {
+  const { leetcodeSession, codingninjasToken, completed, setCompleted } =
+    useContext(ApiContext);
   const [qstats, setQstats] = useState(problem);
   const [qstatsCn, setQstatsCn] = useState(null);
   // console.log(leetcodeSession);
@@ -17,19 +18,23 @@ export default function Question({ problem, index }) {
     if (!urlLeetcode && !urlCodingninjas) return; // Both URLs are empty, no need to fetch
     let codingninjasQid = null;
     let leetcodeTitle = null;
-  
+
     if (urlCodingninjas) {
       codingninjasQid = urlCodingninjas.split("/problems/")[1].split("?")[0];
     }
-  
+
     if (urlLeetcode) {
       leetcodeTitle = urlLeetcode.split("/")[4];
     }
-  
-    const cnData = codingninjasQid ? getCacheData(`codingninjas_${codingninjasQid}`) : null;
-    const lcData = leetcodeTitle ? getCacheData(`leetcode_${leetcodeTitle}`) : null;
-  
-    if (cnData && lcData && (!shouldFetchData(cnData) || !shouldFetchData(lcData))) {
+
+    const cnData = codingninjasQid
+      ? getCacheData(`codingninjas_${codingninjasQid}`)
+      : null;
+    const lcData = leetcodeTitle
+      ? getCacheData(`leetcode_${leetcodeTitle}`)
+      : null;
+
+    if (!shouldFetchData(cnData) || !shouldFetchData(lcData)) {
       setQstatsCn(cnData);
       setQstats(lcData);
     } else {
@@ -37,20 +42,35 @@ export default function Question({ problem, index }) {
         questionStatsCodingninjas(codingninjasToken, codingninjasQid),
         questionStatsLeetcode(leetcodeSession, leetcodeTitle),
       ]);
-  
+
       if (codingninjasResponse) {
         setQstatsCn(codingninjasResponse);
       }
-  
+
       if (leetcodeResponse) {
         setQstats(leetcodeResponse);
+      }
+
+      if (
+        !shouldFetchData(leetcodeResponse) ||
+        !shouldFetchData(codingninjasResponse)
+      ) {
+        let completedQuestions = completed;
+        completedQuestions[pageid]++;
+        console.log(
+          completedQuestions[pageid],
+          completedQuestions,
+          pageid,
+          completed
+        );
+        setCompleted(completedQuestions);
       }
     }
   }
   useEffect(() => {
     // console.log("useEffect", problem.codingninjas);
     splitQuestionTitle(problem.leetcode, problem.codingninjas);
-  }, []);
+  }, [completed]);
   return (
     <tr class="hover">
       <td class="bg-base-200">{index + 1}</td>
