@@ -1,13 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { useCookies } from "react-cookie";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { problems } from "../Routes/problems";
+import { getCacheData, shouldFetchData } from "./apiLeetcode";
 
 export const ApiContext = createContext();
 
@@ -34,6 +28,43 @@ export const ApiContextProvider = ({ children }) => {
   const [codingninjasToken, setCodingninjasToken] = useState(
     cookies.codingninjasToken
   );
+  const [completed, setCompleted] = useState({});
+  let completedQuestions = {};
+  async function splitQuestionTitle(urlLeetcode, urlCodingninjas, index) {
+    if (!urlLeetcode && !urlCodingninjas) return; // Both URLs are empty, no need to fetch
+    let codingninjasQid = null;
+    let leetcodeTitle = null;
+
+    if (urlCodingninjas) {
+      codingninjasQid = urlCodingninjas.split("/problems/")[1].split("?")[0];
+    }
+
+    if (urlLeetcode) {
+      leetcodeTitle = urlLeetcode.split("/")[4];
+    }
+
+    const cnData = codingninjasQid
+      ? getCacheData(`codingninjas_${codingninjasQid}`)
+      : null;
+    const lcData = leetcodeTitle
+      ? getCacheData(`leetcode_${leetcodeTitle}`)
+      : null;
+
+    if (!shouldFetchData(cnData) || !shouldFetchData(lcData)) {
+      completedQuestions[index]++;
+    }
+  }
+  useEffect(() => {
+    problems.map((day, index) => {
+      completedQuestions[index] = 0;
+      day.value.map((problem) => {
+        splitQuestionTitle(problem.leetcode, problem.codingninjas, index);
+      });
+    });
+
+    setCompleted(completedQuestions);
+    console.log(completedQuestions);
+  }, []);
   // useEffect(() => {
   //   //goto next day page
   //   window.location.href = "/stats/" + day;
@@ -49,6 +80,8 @@ export const ApiContextProvider = ({ children }) => {
         setDayProgression,
         codingninjasToken,
         setCodingninjasToken,
+        completed,
+        setCompleted,
       }}
     >
       {children}

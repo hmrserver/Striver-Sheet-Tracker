@@ -1,11 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { problems } from "../Routes/problems";
 import { ApiContext } from "../contexts/ApiContext";
 
 export default function Header() {
   let location = useLocation();
-  const { leetcodeSession } = useContext(ApiContext);
+  const { leetcodeSession, completed } = useContext(ApiContext);
+  const [dayProgression, setDayProgression] = useState(0);
+  const [totalCompletedQ, setTotalCompleted] = useState(0);
+  const [totalQs, setTotalQuestions] = useState(0);
   //get json data from JWT token
 
   let jwtData = {};
@@ -17,8 +20,8 @@ export default function Header() {
   // const { id } = useParams();
   // console.log(id);
   const id = location.pathname.split("/")[2];
-  const showDayInfo = isNaN(id) ? false : true;
-  // if (showDayInfo) {
+  const isDayPage = isNaN(id) ? false : true;
+  // if (isDayPage) {
   //   console.log(id);
   // } else {
   //   console.log("no id");
@@ -27,6 +30,30 @@ export default function Header() {
 
   // }
   // console.log(location.pathname);
+
+  useEffect(() => {
+    let totalCompleted = 0;
+
+    let totalQuestions = 0;
+    problems.map((day, index) => {
+      if (isDayPage) {
+        if (index === parseInt(id)) {
+          totalCompleted += completed[index];
+          totalQuestions += day.value.length;
+        }
+      } else {
+        totalCompleted += completed[index];
+        totalQuestions += day.value.length;
+      }
+    });
+
+    setDayProgression(Math.round((totalCompleted / totalQuestions) * 100));
+    console.log(dayProgression);
+    setTotalCompleted(totalCompleted);
+    setTotalQuestions(totalQuestions);
+    console.log(totalCompletedQ);
+    console.log(totalQs);
+  }, [completed]);
   if (location.pathname === "/login") {
     return;
   } else {
@@ -35,25 +62,21 @@ export default function Header() {
         <div class="max-w-screen-xl px-4 py-8 mx-auto sm:py-12 sm:px-6 lg:px-8">
           <div class="sm:justify-between sm:items-center sm:flex">
             <div class="text-center sm:text-left flex">
-              {/* {showDayInfo ? (
+              {
                 <div
-                  class="radial-progress text-primary text-green-500 mr-4"
-                  style={{ "--value": { dayProgression } }}
+                  class="radial-progress bg-slate-800 text-primary text-green-500 mr-4"
+                  style={{ "--value": dayProgression }}
                 >
-                  {dayProgression}%
+                  {totalCompletedQ}/{totalQs}
                 </div>
-              ) : (
-                ""
-              )} */}
+              }
               <span>
                 <h1 class="text-2xl font-bold text-gray-50 sm:text-3xl">
-                  {showDayInfo
-                    ? problems[id].day.split(":")[0]
-                    : "Welcome Back!"}
+                  {isDayPage ? problems[id].day.split(":")[0] : "Welcome Back!"}
                 </h1>
 
                 <p class="mt-1.5 text-sm text-gray-500">
-                  {showDayInfo
+                  {isDayPage
                     ? problems[id].day.split(":")[1]
                     : "Let's Finish This! 🎉"}
                 </p>
