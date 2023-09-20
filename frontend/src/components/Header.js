@@ -48,11 +48,11 @@ export default function Header() {
     });
 
     setDayProgression(Math.round((totalCompleted / totalQuestions) * 100));
-    console.log(dayProgression);
+    // console.log(dayProgression);
     setTotalCompleted(totalCompleted);
     setTotalQuestions(totalQuestions);
-    console.log(totalCompletedQ);
-    console.log(totalQs);
+    // console.log(totalCompletedQ);
+    // console.log(totalQs);
   }, [completed]);
   if (location.pathname === "/login") {
     return;
@@ -67,7 +67,7 @@ export default function Header() {
                   class="radial-progress bg-slate-800 text-primary text-green-500 mr-4"
                   style={{ "--value": dayProgression }}
                 >
-                  {totalCompletedQ}/{totalQs}
+                  <b>{totalCompletedQ}/{totalQs}</b>
                 </div>
               }
               <span>

@@ -63,7 +63,7 @@ export const ApiContextProvider = ({ children }) => {
     });
 
     setCompleted(completedQuestions);
-    console.log(completedQuestions);
+    // console.log(completedQuestions);
   }, []);
   // useEffect(() => {
   //   //goto next day page

@@ -57,12 +57,12 @@ export default function Question({ problem, index, pageid }) {
       ) {
         let completedQuestions = completed;
         completedQuestions[pageid]++;
-        console.log(
-          completedQuestions[pageid],
-          completedQuestions,
-          pageid,
-          completed
-        );
+        // console.log(
+        //   completedQuestions[pageid],
+        //   completedQuestions,
+        //   pageid,
+        //   completed
+        // );
         setCompleted(completedQuestions);
       }
     }
